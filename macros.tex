@@ -1,0 +1,90 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PAPER SPECIFIC MACROS
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% GENERIC MACROS
+
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{TODO:} #1}}
+
+\newcommand{\eps}{\varepsilon}
+
+\DeclareMathOperator{\poly}{poly}
+
+% Numbers
+\newcommand{\Nat} {\mathbb{N}}
+\newcommand{\Int} {\mathbb{Z}}
+\newcommand{\Rat} {\mathbb{Q}}
+\newcommand{\Real}{\mathbb{R}}
+\newcommand{\Comp}{\mathbb{C}}
+
+% Sets, Tuples
+\newcommand{\set}  [1]{\{#1\}}
+\newcommand{\tup}  [1]{\langle#1\rangle}
+
+% Arrows
+\newcommand{\ra}{\rightarrow}
+\newcommand{\la}{\leftarrow}
+\newcommand{\lra}{\leftrightarrow}
+\newcommand{\Ra}{\Rightarrow}
+\newcommand{\La}{\Leftarrow}
+\newcommand{\Lra}{\Leftrightarrow}
+\newcommand{\ov}{\overline}
+
+% Logic
+\newcommand{\limp}{\rightarrow}
+\newcommand{\liff}{\leftrightarrow}
+
+\newcommand{\bigand}{\bigwedge}
+\newcommand{\bigor} {\bigvee}
+
+\newcommand{\proves}{\vdash}
+
+
+% Multi-part definitions
+\newcommand{\twopartdef}[4]
+{
+	\left\{
+		\begin{array}{ll}
+			#1 & \mbox{if } #2 \\
+			#3 & \mbox{if } #4
+		\end{array}
+	\right.
+}
+
+\newcommand{\threepartdef}[6]
+{
+	\left\{
+		\begin{array}{lll}
+			#1 & \mbox{if } #2 \\
+			#3 & \mbox{if } #4 \\
+			#5 & \mbox{if } #6
+		\end{array}
+	\right.
+}
+
+\newcommand{\fourpartdef}[8]
+{
+	\left\{
+		\begin{array}{lll}
+			#1 & \mbox{if } #2 \\
+			#3 & \mbox{if } #4 \\
+			#5 & \mbox{if } #6 \\
+			#7 & \mbox{if } #8
+		\end{array}
+	\right.
+}
+
+\newenvironment{tightcenter}{%
+  \setlength\topsep{0pt}
+  \setlength\parskip{0pt}
+  \begin{center}
+}{%
+  \end{center}
+}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 

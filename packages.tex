@@ -1,0 +1,59 @@
+%%%%% General %%%%%
+\usepackage[utf8]{inputenc}
+\usepackage[hidelinks]{hyperref}
+\usepackage{paralist}
+\usepackage{enumitem}
+\usepackage{comment}
+
+\usepackage{marginnote}
+\renewcommand*{\marginfont}{\normalfont\footnotesize}
+
+\newcommand*{\lecturedate}[4]{%
+  \marginnote{%
+  \begin{tikzpicture}[framed,inner frame sep=0pt,text width=1cm,align=center]
+    \node [fill=lightgray] at (0,0)                                (dayofweek)  {#1};
+    \node [fill=white    ] at ($(dayofweek)  +(0,-\baselineskip)$) (dayofmonth) {#2};
+    \node [fill=white    ] at ($(dayofmonth) +(0,-\baselineskip)$) (month)      {#3};
+    \node [fill=lightgray] at ($(month)      +(0,-\baselineskip)$) (dayofmonth) {#4};
+  \end{tikzpicture}}%
+}
+
+%%%%% Graphics %%%%%
+\usepackage{graphicx}
+
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{arrows}
+
+\usepackage{color}
+
+%%%%% Math %%%%%
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{thmtools}
+\usepackage{thm-restate}
+\usepackage{mathtools}
+\usepackage{oubraces}
+\usepackage{stmaryrd}
+
+\declaretheorem[style=plain]{theorem}
+\declaretheorem[style=plain]{lemma}
+\declaretheorem[style=plain]{proposition}
+\declaretheorem[style=definition,qed=$\lhd$]{definition}
+\declaretheorem[style=definition]{example}
+\declaretheorem[style=remark]{remark}
+
+\usepackage{proof}
+
+%%%%% Algorithms %%%%%
+\usepackage[ruled,linesnumbered,vlined]{algorithm2e}
+\DontPrintSemicolon
+\let\oldnl\nl% Store \nl in \oldnl
+\newcommand{\nonl}{\renewcommand{\nl}{\let\nl\oldnl}}% Remove line number for one line
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 

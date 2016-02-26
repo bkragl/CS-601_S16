@@ -1,0 +1,26 @@
+# LaTeX
+*.aux
+*.bbl
+*.blg
+*.bst
+*.dvi
+*.fdb_latexmk
+*.fls
+*.idx
+*.lof
+*.log
+*.nav
+*.out
+*.pdf
+*.snm
+*.synctex.gz
+*.vtc
+*.toc
+
+# Emacs
+.#*
+*~
+
+# Vim
+.*.swp
+.*.swo
