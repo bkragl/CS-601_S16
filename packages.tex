@@ -1,6 +1,6 @@
 %%%%% General %%%%%
 \usepackage[utf8]{inputenc}
-\usepackage[hidelinks]{hyperref}
+\usepackage{hyperref}
 \usepackage{paralist}
 \usepackage{enumitem}
 \usepackage{comment}
@@ -8,14 +8,16 @@
 \usepackage{marginnote}
 \renewcommand*{\marginfont}{\normalfont\footnotesize}
 
-\newcommand*{\lecturedate}[4]{%
+\newcommand*{\lecture}[5]{%
+  \stepcounter{section}
+  \section*{\thesection\quad #1%
   \marginnote{%
   \begin{tikzpicture}[framed,inner frame sep=0pt,text width=1cm,align=center]
-    \node [fill=lightgray] at (0,0)                                (dayofweek)  {#1};
-    \node [fill=white    ] at ($(dayofweek)  +(0,-\baselineskip)$) (dayofmonth) {#2};
-    \node [fill=white    ] at ($(dayofmonth) +(0,-\baselineskip)$) (month)      {#3};
-    \node [fill=lightgray] at ($(month)      +(0,-\baselineskip)$) (dayofmonth) {#4};
-  \end{tikzpicture}}%
+    \node [fill=lightgray] at (0,0)                                (dayofweek)  {#2};
+    \node [fill=white    ] at ($(dayofweek)  +(0,-\baselineskip)$) (dayofmonth) {#3};
+    \node [fill=white    ] at ($(dayofmonth) +(0,-\baselineskip)$) (month)      {#4};
+    \node [fill=lightgray] at ($(month)      +(0,-\baselineskip)$) (dayofmonth) {#5};
+  \end{tikzpicture}}}%
 }
 
 %%%%% Graphics %%%%%
@@ -25,6 +27,7 @@
 \usetikzlibrary{calc}
 \usetikzlibrary{backgrounds}
 \usetikzlibrary{arrows}
+\usetikzlibrary{positioning}
 
 \usepackage{color}
 
@@ -39,11 +42,11 @@
 \usepackage{stmaryrd}
 
 \declaretheorem[style=plain]{theorem}
-\declaretheorem[style=plain]{lemma}
-\declaretheorem[style=plain]{proposition}
-\declaretheorem[style=definition,qed=$\lhd$]{definition}
-\declaretheorem[style=definition]{example}
-\declaretheorem[style=remark]{remark}
+\declaretheorem[style=plain,sibling=theorem]{lemma}
+\declaretheorem[style=plain,sibling=theorem]{proposition}
+\declaretheorem[style=definition,sibling=theorem,qed=$\lhd$]{definition}
+\declaretheorem[style=definition,sibling=theorem]{example}
+\declaretheorem[style=remark,sibling=theorem]{remark}
 
 \usepackage{proof}
 
