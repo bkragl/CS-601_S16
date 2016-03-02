@@ -31,21 +31,21 @@ An algorithm $A$ is a polytime algorithm if its worst-case runtime $T_A$ is boun
 \end{definition}
 
 We now review some important complexity classes.
-\begin{definition}[P] \label{pdef} A language $L$ is in the complexity class P if there exists a polytime algorithm $A$ that solves its decision problem.
+\begin{definition}[$\cc{P}$] \label{pdef} A language $L$ is in the complexity class $\cc{P}$ if there exists a polytime algorithm $A$ that solves its decision problem.
 \end{definition}
 
-\begin{definition}[NP and coNP]\label{npdef} A language $L$ is in the complexity class NP if there exist a polynomial $p$ and a polytime algorithm $A$ such that:
+\begin{definition}[$\cc{NP}$ and $\cc{coNP}$]\label{npdef} A language $L$ is in the complexity class $\cc{NP}$ if there exist a polynomial $p$ and a polytime algorithm $A$ such that:
 $$\forall x \in L ~~ \exists y \in \{0, 1\}^{p(\vert x \vert )} ~~ A(x, y) = 1,$$ and 
 $$\forall x \not \in L ~~ \forall y \in \{0, 1\}^{p(\vert x \vert )} ~~ A(x, y) = 0.$$
 
-If $A(x, y) = 1$, then $y$ is said to be a witness for $x$. A language $L$ is in coNP if and only if its complement, $\Sigma^* \setminus L$, is in NP.
+If $A(x, y) = 1$, then $y$ is said to be a witness for $x$. A language $L$ is in $\cc{coNP}$ if and only if its complement, $\Sigma^* \setminus L$, is in $\cc{NP}$.
 \end{definition}
 
 \begin{proposition}
-P is a subset of NP.
+$\cc{P} \subseteq \cc{NP}$.
 \end{proposition}
 \begin{proof}
-If $L \in P$, then there exists a polytime algorithm $A$ that solves its decision problem. The same algorithm can be used as in Definition~\ref{npdef} with any arbitrary witness to show that $L$ is in $NP$.
+If $L \in \cc{P}$, then there exists a polytime algorithm $A$ that solves its decision problem. The same algorithm can be used as in Definition~\ref{npdef} with any arbitrary witness to show that $L$ is in $\cc{NP}$.
 \end{proof}
 
 \subsection{Probabilistic Complexity Classes}
@@ -61,39 +61,39 @@ $A$ is a probabilistic polytime algorithm if:
 
 We now define several useful probabilistic complexity classes.
 
-\begin{definition}[RP -- Randomized Polynomial] \label{rpdef}
-A decision problem $L$ is in RP if there exist a polynomial $p$ and a probabilistic polytime algorithm $A$ such that:
-$$\forall x \in L ~~~ Pr[A(x, r) = 1] > \frac{1}{2},$$ and $$\forall x \not \in L ~~~ Pr[A(x, r) = 1] = 0,$$
+\begin{definition}[$\cc{RP}$ -- Randomized Polynomial] \label{rpdef}
+A decision problem $L$ is in $\cc{RP}$ if there exist a polynomial $p$ and a probabilistic polytime algorithm $A$ such that:
+$$\forall x \in L ~~~ \Pr[A(x, r) = 1] > \frac{1}{2},$$ and $$\forall x \not \in L ~~~ \Pr[A(x, r) = 1] = 0,$$
 where the probabilities are calculated over all $r \in \{0, 1\}^{p(\vert x \vert)}$ uniformly.
 
 This intuitively means that the algorithm does rejection correctly, i.e., every $x \not \in L$ is always rejected and accepts correctly with probability more than half.
 \end{definition}
 
-\begin{definition}[coRP] 
-A decision problem $L$ is in coRP if there exist a polynomial $p$ and a probabilistic polytime algorithm $A$ such that:
-$$\forall x \in L ~~~ Pr[A(x, r) = 1] = 1,$$ and $$\forall x \not \in L ~~~ Pr[A(x, r) = 1] < \frac{1}{2},$$
+\begin{definition}[$\cc{coRP}$] 
+A decision problem $L$ is in $\cc{coRP}$ if there exist a polynomial $p$ and a probabilistic polytime algorithm $A$ such that:
+$$\forall x \in L ~~~ \Pr[A(x, r) = 1] = 1,$$ and $$\forall x \not \in L ~~~ \Pr[A(x, r) = 1] < \frac{1}{2},$$
 where the probabilities are calculated over all $r \in \{0, 1\}^{p(\vert x \vert)}$ uniformly.
 
 This intuitively means that the algorithm does acceptance correctly, i.e., every $x \in L$ is always accepted and rejects correctly with probability more than half.
 \end{definition}
 
-Both RP and coRP account for one-sided error, now we define a complexity class that allows two-sided errors, i.e., in both acceptance and rejection.
+Both $\cc{RP}$ and $\cc{coRP}$ account for one-sided error, now we define a complexity class that allows two-sided errors, i.e., in both acceptance and rejection.
 
-\begin{definition}[BPP -- Bounded Probabilistic Polynomial] 
-A decision problem $L$ is in BPP if there exist a polynomial $p$ and a probabilistic polytime algorithm $A$ such that:
-$$\forall x \in L ~~~ Pr[A(x, r) = 1] \geq \frac{2}{3},$$ and $$\forall x \not \in L ~~~ Pr[A(x, r) = 1] \leq \frac{1}{3},$$
+\begin{definition}[$\cc{BPP}$ -- Bounded Probabilistic Polynomial] 
+A decision problem $L$ is in $\cc{BPP}$ if there exist a polynomial $p$ and a probabilistic polytime algorithm $A$ such that:
+$$\forall x \in L ~~~ \Pr[A(x, r) = 1] \geq \frac{2}{3},$$ and $$\forall x \not \in L ~~~ \Pr[A(x, r) = 1] \leq \frac{1}{3},$$
 where the probabilities are calculated over all $r \in \{0, 1\}^{p(\vert x \vert)}$ uniformly.
 \end{definition}
 
-\textbf{Note:} The $\frac{1}{2}$'s in definitions of RP and coRP are arbitrary numbers and one can get same complexity classes using other constant numbers or even constants raised to the power of a polynomial by simply repeating the algorithms. On the other hand in the definition of BPP, the first constant must be bigger than a half and the second one must be less than a half. To see why, consider a coin-tossing algorithm.
+\textbf{Note:} The $\frac{1}{2}$'s in definitions of $\cc{RP}$ and $\cc{coRP}$ are arbitrary numbers and one can get same complexity classes using other constant numbers or even constants raised to the power of a polynomial by simply repeating the algorithms. On the other hand in the definition of $\cc{BPP}$, the first constant must be bigger than a half and the second one must be less than a half. To see why, consider a coin-tossing algorithm.
 
 \begin{definition}[Extended Decision Algorithms]
 An extended decision algorithm $A$ is an algorithm that can return one of the three values $0$, $1$ and $?$, signifying rejection, acceptance and doubt or failure respectively.
 \end{definition}
 
-\begin{definition}[ZPP -- Zero-error Probabilistic Polynomial]\label{zppdef}
-A decision problem $L$ is in ZPP if there is a polynomial $p$ and a polytime extended algorithm $A$ such that:
-$$\forall x ~~ Pr[A(x, r) = ?] \leq \frac{1}{2},$$ and
+\begin{definition}[$\cc{ZPP}$ -- Zero-error Probabilistic Polynomial]\label{zppdef}
+A decision problem $L$ is in $\cc{ZPP}$ if there is a polynomial $p$ and a polytime extended algorithm $A$ such that:
+$$\forall x ~~ \Pr[A(x, r) = ?] \leq \frac{1}{2},$$ and
 $$\forall x ~~ \forall r \in \{0, 1\}^{p(\vert x \vert)}  ~~ A(x, r)\neq ? \Rightarrow A(x, r) = \left\{\begin{matrix}
 1 & x \in L\\ 
 0 & x \not \in L
@@ -104,28 +104,28 @@ Intuitively, this means that the algorithm fails (is unsure) with probability le
 \end{definition}
 
 \begin{proposition}
-$P \subseteq RP.$
+$\cc{P} \subseteq \cc{RP}.$
 \end{proposition}
 \begin{proof}
 Use the algorithm $A$ from Definition~\ref{pdef} in Definition~\ref{rpdef} and ignore $r$. 
 \end{proof}
 
-One can similarly and easily show that $P \subseteq coRP$ and $P \subseteq ZPP$.
+One can similarly and easily show that $\cc{P} \subseteq \cc{coRP}$ and $\cc{P} \subseteq \cc{ZPP}$.
 
 \begin{proposition}
-$RP \subseteq NP$.
+$\cc{RP} \subseteq \cc{NP}$.
 \end{proposition}
 \begin{proof}
-If $L \in RP$, then for each $x \in L$, $Pr[A(x, r) = 1] > \frac{1}{2}$. Since this probability is positive, there exists an $r$ such that $A(x, r) = 1$. This $r$ can be used as a witness for $x$. Similarly, if $x \not \in L$, no witness can be found since $Pr[A(x, r) = 1] = 0$.
+If $L \in \cc{RP}$, then for each $x \in L$, $\Pr[A(x, r) = 1] > \frac{1}{2}$. Since this probability is positive, there exists an $r$ such that $A(x, r) = 1$. This $r$ can be used as a witness for $x$. Similarly, if $x \not \in L$, no witness can be found since $\Pr[A(x, r) = 1] = 0$.
 \end{proof}
 
-\textbf{Note:} We do not know whether $P=RP$ or whether $RP=NP$. 
+\textbf{Note:} We do not know whether $\cc{P}=\cc{RP}$ or whether $\cc{RP}=\cc{NP}$. 
 
 \begin{proposition}
-$RP \subseteq BPP.$
+$\cc{RP} \subseteq \cc{BPP}.$
 \end{proposition}
 \begin{proof}
-Let $L \in RP$. Take an algorithm $A$ for it as in Definition~\ref{rpdef} and construct the algorithm $A^{(k)}$ which takes a string $x$ as input and works as follows:
+Let $L \in \cc{RP}$. Take an algorithm $A$ for it as in Definition~\ref{rpdef} and construct the algorithm $A^{(k)}$ which takes a string $x$ as input and works as follows:
 \begin{tabbing}
 \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \=\kill
 \> Choose random strings $r_1, r_2, \ldots, r_k$\\
@@ -139,18 +139,18 @@ Let $L \in RP$. Take an algorithm $A$ for it as in Definition~\ref{rpdef} and co
 If $x \in L$, then $A(x, r)$ returns 1 with probability more than $\frac{1}{2}$, so $A^{(k)}$ returns 1 with probability more than $1 - \frac{1}{2^k}$. It is sufficient to choose $k$ such that this value gets bigger than $\frac{2}{3}$. On the other hand, if $x \not \in L$, then $A(x, r)$ always returns 0 and so does $A^{(k)}$.
 \end{proof}
 
-\textbf{Note:} The relationship between BPP and NP is an open problem.
+\textbf{Note:} The relationship between $\cc{BPP}$ and $\cc{NP}$ is an open problem.
 
-\textbf{Homework:} Prove that if $NP \subseteq BPP$, then $NP = RP$.
+\textbf{Homework:} Prove that if $\cc{NP} \subseteq \cc{BPP}$, then $\cc{NP} = \cc{RP}$.
 
 $$\begin{tikzpicture}
   \tikzset{main node/.style={circle,fill=blue!20,draw,minimum size=1cm,inner sep=0pt}}
-    \node[main node] (1) {$NP$};
-    \node[main node] (2) [right =1.5cm of 1]  {$BPP$};
-    \node[main node] (3) [right =1.5cm of 2]  {$coNP$};
-    \node[main node] (4) [below = 1.5cm of 1] {$RP$};
-    \node[main node] (5) [below = 1.5cm of 3] {$coRP$};
-    \node[main node] (6) [below = 3cm of 2] {$P$};
+    \node[main node] (1) {$\cc{NP}$};
+    \node[main node] (2) [right =1.5cm of 1]  {$\cc{BPP}$};
+    \node[main node] (3) [right =1.5cm of 2]  {$\cc{coNP}$};
+    \node[main node] (4) [below = 1.5cm of 1] {$\cc{RP}$};
+    \node[main node] (5) [below = 1.5cm of 3] {$\cc{coRP}$};
+    \node[main node] (6) [below = 3cm of 2] {$\cc{P}$};
 
     \path[draw,thick]
     (6) edge node {} (4)
@@ -169,15 +169,15 @@ Given a probabilistic algorithm $A$, its average runtime is a function of the le
 $$\max_{x \in \{0, 1\}^n} E[T(A, x, r)],$$
 where $T(A, x, r)$ is the runtime of $A$ with inputs $x$ and $r$ and the expectation is defined uniformly over all possible $r$. Intuitively, for each input $x$, we take the average time the algorithm requires to terminate on $x$ among all random $r$'s and then we take the maximum over all strings $x$ of the fixed length $n$.  
 \end{definition}
-\begin{definition}[ACP -- Average Case Polynomial]\label{acpdef}
-A decision problem $L$ is in ACP if there is an algorithm $A$ with polynomial average runtime that always produces the right answer for $L$.
+\begin{definition}[$\cc{ACP}$ -- Average Case Polynomial]\label{acpdef}
+A decision problem $L$ is in $\cc{ACP}$ if there is an algorithm $A$ with polynomial average runtime that always produces the right answer for $L$.
 \end{definition}
 
 \begin{proposition}
-$ZPP = ACP.$
+$\cc{ZPP} = \cc{ACP}.$
 \end{proposition}
 \begin{proof}
-We first prove that $ZPP \subseteq ACP$. Let $L \in ZPP$ and $A$ be an algorithm as in Definition~\ref{zppdef}. We provide the following algorithm $A'$:
+We first prove that $\cc{ZPP} \subseteq \cc{ACP}$. Let $L \in \cc{ZPP}$ and $A$ be an algorithm as in Definition~\ref{zppdef}. We provide the following algorithm $A'$:
 \begin{tabbing}
 \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \=\kill
 \> 1: Choose a random string $r$\\
@@ -190,7 +190,7 @@ We first prove that $ZPP \subseteq ACP$. Let $L \in ZPP$ and $A$ be an algorithm
 
 This algorithm, will always return the correct answer upon termination. Assuming that $A(x, r)$ terminates in time at most $t$, $A'$, when run on $x$, has an average runtime of at most $$t + \frac{1}{2} t + \frac{1}{4} t + \ldots = t \sum_{i=0}^\infty \frac{1}{2^i} = 2t.$$
 
-Now we prove that $ACP \subseteq ZPP$. Let $A$ be an algorithm as in Definition~\ref{acpdef}. We create the following algorithm $A'$:
+Now we prove that $\cc{ACP} \subseteq \cc{ZPP}$. Let $A$ be an algorithm as in Definition~\ref{acpdef}. We create the following algorithm $A'$:
 
 \begin{tabbing}
 \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \=\kill
