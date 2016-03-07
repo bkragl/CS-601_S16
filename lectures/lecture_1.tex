@@ -69,7 +69,7 @@ where the probabilities are calculated over all $r \in \{0, 1\}^{p(\vert x \vert
 This intuitively means that the algorithm does rejection correctly, i.e., every $x \not \in L$ is always rejected and accepts correctly with probability more than half.
 \end{definition}
 
-\begin{definition}[$\cc{coRP}$] 
+\begin{definition}[$\cc{coRP}$] \label{corpdef}
 A decision problem $L$ is in $\cc{coRP}$ if there exist a polynomial $p$ and a probabilistic polytime algorithm $A$ such that:
 $$\forall x \in L ~~~ \Pr[A(x, r) = 1] = 1,$$ and $$\forall x \not \in L ~~~ \Pr[A(x, r) = 1] < \frac{1}{2},$$
 where the probabilities are calculated over all $r \in \{0, 1\}^{p(\vert x \vert)}$ uniformly.
@@ -206,7 +206,36 @@ When the returned value is not ?, $A'$ returns only correct answers because $A$ 
 \end{proof}
 
 
+\begin{proposition} $\cc{ZPP} = \cc{RP} \cap \cc{coRP}$.\footnote{Was actually covered in Lecture 2}
+\end{proposition}
+\begin{proof}
+We first show that $\cc{ZPP} \subseteq \cc{RP}$. A similar reasoning shows that $\cc{ZPP} \subseteq \cc{coRP}$. Take the algorithm $A$ as in Definition \ref{zppdef}. We construct the following algorithm that has the properties of Definition \ref{rpdef}:
 
+\begin{tabbing}
+\hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \=\kill
+\>{\bf if} $A(x, r) \neq ?$ {\bf then } \\
+\>\> {\bf return} $A(x, r)$ \\
+\>{\bf else} \\
+\>\> {\bf return} $0$\\
+\>{\bf endif} .
+\end{tabbing}
+
+Now we prove the other side. Let $L \in \cc{RP} \cap \cc{coRP}$ and let $A_1$ and $A_2$ be decision algorithms for $L$ according to Definitions \ref{rpdef} and \ref{corpdef}. The following algorithm $A'$ shows that $L \in \cc{ZPP}$ according to Definition \ref{zppdef}:
+
+\begin{tabbing}
+\hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \=\kill
+\>{\bf if} $A_1(x, r) = A_2(x, r)$ {\bf then } \\
+\>\> {\bf return} $A_1(x, r)$ \\
+\>{\bf else} \\
+\>\> {\bf return} $?$\\
+\>{\bf endif} .
+\end{tabbing}
+
+If $A'$ returns something other than $?$, then its answer is correct, because $A_1$ rejects correctly and $A_2$ accepts correctly and if they agree, then the decision must be correct.
+
+We should now show that $\Pr[A'(x, r) = ?] \leq \frac{1}{2}$. If $x \in L$ then $A_2(x, r) = 1$ with probability $1$ and $\Pr[A_1(x, r) = 1] \geq \frac{1}{2}$, so $\Pr[A'(x, r) = 1] \geq \frac{1}{2}$ and $\Pr[A'(x, r) = ?] \leq \frac{1}{2}$. A similar argument settles the case when $x \not \in L$. 
+
+\end{proof}
 
 %%% Local Variables: 
 %%% mode: latex
