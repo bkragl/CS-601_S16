@@ -1,5 +1,123 @@
 \lecture{Polynomial Identity Testing \& Branching Programs}{Wed}{2}{Mar}{2016}
 
+We begin by introducing the polynomial equivalence problem.
+
+\begin{definition}[Polynomial Equivalence Problem] Given a field $\mathbb{F}$ and two polynomials $p_1 (x_1, \ldots, x_n)$ and $p_2 (x_1, \ldots, x_n)$ over $\mathbb{F}$, decide if the two polynomials are equivalent.
+\end{definition}
+
+Note that we do not have the polynomials in expanded form and can only access them using oracles, i.e.\@ the only way to get information about a polynomial is to query its value for a given tuple $(x_1, \ldots, x_n)$. 
+
+\begin{definition}[Polynomial Identity Testing Problem]
+Given a polynomial $p(x_1, \ldots, x_n)$, decide whether $p \equiv 0$.
+\end{definition}
+
+The two problems can straightforwardly reduce to each other. It is easy to show that they are both in $\cc{coNP}$ with oracle access, i.e.\@ they are in $\cc{coNP}$ assuming that each oracle query takes polynomial time.
+
+\begin{lemma}[Schwartz--Zippel lemma] 
+Let $p \in \mathbb{F}[x_1, \ldots, x_n]$ be an $n$-variable polynomial of degree $d$ over the field $\mathbb{F}$. If $p$ is non-zero, then it has at most $d \vert \mathbb{F} \vert ^{n-1}$ roots. In other words, if $a_1, a_2, \ldots, a_n$ are chosen independently and uniformly from $\mathbb{F}$, then $$\Pr[ p(a_1, \ldots, a_n) = 0 ] \leq \frac{d}{\vert \mathbb{F} \vert}.$$
+\end{lemma}
+\begin{proof}
+We prove a slightly more general case. Let $S$ be a finite subset of $\mathbb{F}$, and let $r_1, \ldots, r_n$ be chosen randomly and independently from $S$, we prove that 
+$\Pr[p(r_1, \ldots, r_n) = 0] \leq \frac{d}{\vert S \vert}$.
+
+We use induction on $n$ to prove this. For the base case where $n = 1$, we know from basic algebra that $p$ can have at most $d$ roots.
+
+Now assuming that the assertion is true for all polynomials in $n-1$ variables, write $p$ as a polynomial in $x_1$ as follows:
+$$p(x_1, \ldots, x_n) = \sum_{i=0}^d x_1^i p_i(x_2, \ldots, x_n).$$
+
+Since $p$ is non-zero, at least one of $p_i$'s must also be non-zero. Take the greatest $i$ for which $p_i \not \equiv 0$. By definition $\deg(p_i) \leq d - i$. So if we pick $r_2, \ldots, r_n$ randomly from $S$, by induction hypothesis we have $$\Pr[p_i(r_2, \ldots, r_n) = 0] \leq \frac{d-i}{\vert S \vert}.$$
+Moreover, if $p_i(r_2, \ldots, r_n) \not \equiv 0$, then $p(x_1, r_2, \ldots, r_n)$ is a non-zero polynomial of degree $i$ on $x_1$, hence:
+$$\Pr[p(r_1, r_2, \ldots, r_n) = 0 \mid p_i(r_2, \ldots, r_n) \neq 0] \leq \frac{i}{\vert S \vert}.$$
+Denote the events $p(r_1, \ldots, r_n) = 0$ and $p_i (r_2, \ldots, r_n) = 0$ by $A$ and $B$ respectively. We are interested in $\Pr[A]$. We have:
+
+$$
+\begin{matrix*}[l]
+\Pr[A] & = & \Pr[B] \Pr[A \mid B] + \Pr[B^c] \Pr[A \mid B^c] \\ 
+ & \leq & \Pr[B] + \Pr[A \mid B^c]  \\ 
+ & \leq & \frac{d - i}{\vert S \vert} + \frac{i}{\vert S \vert} = \frac{d}{\vert S \vert}.
+\end{matrix*}
+$$
+
+\end{proof}
+
+This lemma provides us with a trivial randomized algorithm that proves polynomial identity testing is in $\cc{coRP}$ with oracle access. 
+
+\begin{proposition}
+Polynomial identity testing is in $\cc{coRP}$ with oracle access.
+\end{proposition}
+\begin{proof}
+The following algorithm has the properties of Definition \ref{corpdef} according to Schwartz--Zippel lemma.
+
+\begin{tabbing}
+\hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \=\kill
+\> {\bf repeat} $m$ {\bf times}\\
+\>\> Choose $a_1, a_2, \ldots, a_n$ randomly and uniformly\\
+\>\>{\bf if} $p(a_1, \ldots, a_n) \not = 0$ {\bf then } \\
+\>\>\> {\bf return} $0$ \\
+\>\>{\bf endif}\\
+\>{\bf endrepeat} \\
+\>{\bf return} $1$
+\end{tabbing}
+
+Here $m$ is chosen so that $ \left( d / \vert \mathbb{F} \vert \right) ^ m \leq \frac{1}{2} $.
+
+\end{proof}
+
+Now we turn to another related problem.
+
+\begin{definition}[Branching Program]
+A branching program is a representation of a binary function over boolean variables $x_1, x_2, \ldots, x_n$. It consists of a rooted DAG (directed acyclic graph), where each terminal node, i.e.\@ a node with no outgoing edges, is either a 1-node (also called an accepting node) or a 0-node (also called a rejecting node). Each non-terminal node is called a decision node and is marked by one of the variables $x_1, x_2, \ldots, x_n$. Every decision node has two outgoing edges labeled $0$ and $1$. 
+
+Given a branching program, its respective function can be computed straightforwardly by beginning at the root and following the edge labeled by value of the respective $x_i$ in each of the decision nodes until we reach a terminal. If the reached terminal is a 1-node, the function returns 1 and otherwise it returns 0.
+\end{definition}
+
+$$\includegraphics{fig1}$$
+As an example, the branching program above\footnote{Taken from Wikipedia} defines this following boolean function:
+$$
+\begin{matrix}
+000 & \rightarrow & 1\\
+001 & \rightarrow & 0\\
+010 & \rightarrow & 0\\
+011 & \rightarrow & 1\\
+100 & \rightarrow & 0\\
+101 & \rightarrow & 0\\
+110 & \rightarrow & 1\\
+111 & \rightarrow & 1\\
+\end{matrix}
+$$
+
+Note that we would never need more than two terminals since we can merge all 1-nodes and 0-nodes together.
+
+\begin{definition}[Read-once Branching Program]
+A read-once branching program is a branching program in which every variable $x_i$ is assigned to at most one decision node.
+\end{definition}
+
+\begin{definition}[Branching Programs Equivalence Problem]
+Given two branching programs $P_1$ and $P_2$, decide if the function computed by $P_1$ is equivalent to the function computed by $P_2$.
+\end{definition}
+
+\textbf{Homework:} Prove that for general branching programs the equivalence problem is $\cc{coNP}$-complete.
+
+\begin{proposition}\label{ronce}
+Equivalence problem of two read-once branching programs is in $\cc{coRP}$.
+\end{proposition}
+\begin{proof}
+We prove this by reducing the problem to polynomial equivalence check. For each of the two given branching programs, we compute a polynomial as follows and then check equivalence of the two polynomials.
+
+We assign a polynomial to each node and edge of the program. These polynomials are calculated recursively (by dynamic programming to be precise). In the end we use the polynomial we computed for the accepting node as the polynomial corresponding to the program.
+
+We assign the constant polynomial $1$ to the root. For each decision vertex $v$ with corresponding variable $x_v$ and corresponding polynomial $p_v$, we assign to its outgoing edges with labels $0$ and $1$, polynomials $p_v(1-x_v)$ and $p_v x_v$ respectively. For each node other than the root, we assign sum of polynomials of its incoming edges as its polynomial.
+
+\end{proof}
+
+\textbf{Homework:} Show that two read-once branching programs are equivalent if and only if their polynomials are.
+
+\textbf{Homework:} Show that we have polynomial time oracle access to these polynomials using programs.
+
+\begin{definition}[Extended Read-once Branching Program] An extended read-once branching program is a branching program in which there are no two decision vertices $u$ and $v$ labeled with the same variable such that a directed path exists from $u$ to $v$.
+\end{definition}
+
+A similar reasoning to that of Proposition \ref{ronce} shows that the equivalence problem over extended read-once branching programs is in $\cc{coRP}$ as well.
 
 
 %%% Local Variables: 
