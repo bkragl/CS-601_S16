@@ -69,7 +69,7 @@ Then $\exists$ a general off-line algorithm $\in\mathcal{G}_{all}$ such that at 
 
 Then the loss vector of this off-line algorithm is 0.
 
-On the other hand, since $\min\limits_i\{p^t_i\}\leq\frac{1}{N}$ the total loss of on-line algorithm for $T$ time steps is at least $T\left(1-\frac{1}{N}\right)$.
+On the other hand, since $\min\limits_i\{p^t_i\}\leqslant\frac{1}{N}$ the total loss of on-line algorithm for $T$ time steps is at least $T\left(1-\frac{1}{N}\right)$.
 \end{proof}
 \subsection{Warm-up: Deterministic Greedy Algorithms}
 \paragraph{N.B.:}For simplicity we consider $l^t_i\in\{0,1\}$ only.\\
@@ -90,24 +90,24 @@ Formally:
 \begin{theorem}
 For a Greedy algorithm $\forall$ sequence of loss vectors holds
 $$
-L^T_{Greedy}\leq NL^T_{\min}+(N-1).
+L^T_{Greedy}\leqslant NL^T_{\min}+(N-1).
 $$
 \end{theorem} 
 \begin{proof}
-At each time step $t$  when a Greedy algorithm incurs a loss of 1 and $L^t_{\min}$ does not increase then one action is removed from $s^t$. The size of $s^t$ can decrease at most $N$ times before $L^t_{\min}$ increases by 1. Hence, $L^t_{Greedy}\leq N-|s^t|+NL^t_{\min}$.
+At each time step $t$  when a Greedy algorithm incurs a loss of 1 and $L^t_{\min}$ does not increase then one action is removed from $s^t$. The size of $s^t$ can decrease at most $N$ times before $L^t_{\min}$ increases by 1. Hence, $L^t_{Greedy}\leqslant N-|s^t|+NL^t_{\min}$.
 \end{proof}
 The theorem gives a week guarantee.
 
 If we consider deterministic algorithms only we cannot hope to do better.
 \begin{theorem}
-$\forall$ deterministic algorithm $D$ $\exists$ a sequence of loss vectors such that $L^T_D=T$ and $L^T_{\min}\leq\left\lfloor\frac{T}{N}\right\rfloor$. In particular, $L^T_D\geq NL^T_{\min}+(T\mod N)$.
+$\forall$ deterministic algorithm $D$ $\exists$ a sequence of loss vectors such that $L^T_D=T$ and $L^T_{\min}\leqslant\left\lfloor\frac{T}{N}\right\rfloor$. In particular, $L^T_D\geqslant NL^T_{\min}+(T\mod N)$.
 \end{theorem}
 \begin{proof}
 Consider any deterministic algorithm $D$.\\
 At time step $t$ look at $x^t$ (the action chosen by $D$ at $t$).\\
 Assign loss 1 to $x^t$ and 0 -- to all other actions.\\
 Since $D$ incurs a loss 1 at each time step then $L^T_D=T$.\\
-Now given this loss vector consider $\sum\limits_{i=1}^NL^T_i=T$. Then $\min\limits_i L^T_i\leq\left\lfloor\frac{T}{N}\right\rfloor$.
+Now given this loss vector consider $\sum\limits_{i=1}^NL^T_i=T$. Then $\min\limits_i L^T_i\leqslant\left\lfloor\frac{T}{N}\right\rfloor$.
 \end{proof}
 We have shown that deterministic algorithms are poor. However, if we randomize a deterministic algorithm we can in fact do better.\\
 \subsection{Randomized Algorithms}
@@ -130,16 +130,16 @@ Formally:
 \begin{theorem}
 For the RG algorithms $\forall$ sequence of loss vectors holds
 $$
-L^T_{RG}\leq(1+\ln N)L^T_{\min}+\ln N,
+L^T_{RG}\leqslant(1+\ln N)L^T_{\min}+\ln N,
 $$
 i.e. an exponential improvement over deterministic algorithms.
 \end{theorem}
 \begin{proof}
 Let $t_j$ be the time when $L^t_{\min}$ is $j$, and $t_{j+1}$ -- when $L^t_{\min}$ is $j+1$.\\
 We have to show what the increase of the GR algorithm during the period $t_{j+1}-t_j$ is.\\
-$\forall t$ we have $1\leq|s^t|\leq N$.\\
-$\forall t\in(t_{j},t_{j+1}]$ the size of $s^t$ shrinks by $k$ (from $n'$ to $n'-k$) and the loss is $\frac{k}{n'}\leq\frac{1}{n'}+\frac{1}{n'-1}+\ldots+\frac{1}{n'-k+1}$.\\
-Then the total loss between $t_j$ and $t_{j+1}$ is at most $\frac{1}{N}+\frac{1}{N-1}+\ldots+\frac{1}{2}+1\leq 1+\ln N$.
+$\forall t$ we have $1\leqslant|s^t|\leqslant N$.\\
+$\forall t\in(t_{j},t_{j+1}]$ the size of $s^t$ shrinks by $k$ (from $n'$ to $n'-k$) and the loss is $\frac{k}{n'}\leqslant\frac{1}{n'}+\frac{1}{n'-1}+\ldots+\frac{1}{n'-k+1}$.\\
+Then the total loss between $t_j$ and $t_{j+1}$ is at most $\frac{1}{N}+\frac{1}{N-1}+\ldots+\frac{1}{2}+1\leqslant 1+\ln N$.
 \end{proof}
 To summarize,
 \begin{itemize}
@@ -156,4 +156,3 @@ Therefore next we would like to describe an algorithm where the average loss $\r
 %%% mode: latex
 %%% TeX-master: "../main"
 %%% End: 
-
