@@ -1,8 +1,159 @@
 \lecture{Decision Making Under Uncertainty}{Mon}{7}{Mar}{2016}
 
+We will consider the problem of repeated decision making in an uncertain environment.
+
+Suppose we have $N$ actions. For instance, every day we drive from home to work and there $N$ possible routes we can take. Another example is a game of rock-paper-scissors.
+
+We would like to have the following on-line algorithm:
+\begin{tabbing}
+\hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \=\kill
+\> {\bf for} $t=1:T$\\
+\>\> The algorithm chooses an action probabilistically (which route to drive)\\
+\>\> The environment selects a loss for each action (puts delays on the routes)\\
+\>{\bf endfor} \\
+\>{\bf return} the loss incurred
+\end{tabbing}
+\paragraph{N.B.:} We consider an adversary environment only.
+
+The goal is to find a good adaptive algorithm for the above setting or player in the game while others play in certain way. What does it mean that the algorithm is ``good''? 
+\begin{definition}[Regret Analysis]
+Given a loss vector beforehand Regret Analysis says how should an algorithm behave in retrospect compared against a ``simple'' alternative strategy (External Regret, for example if we drove the same simple route every day). We would like to characterize a loss as a function of $T$ (the number of runs) and $N$ (the number of actions).
+\end{definition}
+\begin{definition}[Adversarial On-line Model]
+We consider $X=\{1,2,\ldots,N\}$ actions and the following algorithm H:
+\begin{tabbing}
+\hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \=\kill
+\> {\bf for} $t=1:T$\\
+\>\> Select $p^t$ (distribution on the actions)\\
+\>\> Adversary select a loss vector $l^t\in [0,1]^N$\\
+\>{\bf endfor} \\
+\>{\bf return} the loss incurred
+\end{tabbing}
+where $l^t_i\in [0,1]$ is the loss of the $i$-th action at time $t$
+At time $t$ the loss of the algorithm $H$ is the expected loss:
+$$
+l^t_H=\sum\limits_{i=1}^N l^t_ip^t_i.
+$$
+The loss of the $i$-th action for $T$ time steps:
+$$
+L^T_i=\sum\limits_{t=1}^T l^t_i.
+$$
+The loss of the algorithm $H$ for $T$ time steps:
+$$
+L^T_H=\sum\limits_{t=1}^T l^t_H.
+$$
+\end{definition}
+\begin{definition}[External Regret]
+Consider a given class $\mathcal{G}$ of off-line algorithms and define $L^T_{\mathcal{G},\min}=\min\limits_{g\in\mathcal{G}}L^T_g$ as a minimal loss over all the algorithms in $\mathcal{G}$. Then External Regret of a chosen on-line algorithm $H$ compared against $\mathcal{G}$ is 
+$$
+R_{\mathcal{G}}=L^T_H-L^T_{\mathcal{G},\min}.
+$$
+\end{definition}
+In particular, when $\mathcal{G}=X$ then $L^T_{min}=\min\limits_i l^T_i$ is the minimum loss over all actions if we always chose an action $i$ and further on we would be interested in minimizing the difference $R=L^T_H=L^T_{\min}$.
+
+The question is why we cannot compare against a general class of all off-line algorithms $\mathcal{G}_{all}$. The problem is as soon as we allow a set of algorithms to be arbitrary there is nothing much we can do.
+\begin{theorem}
+$\forall$ on-line algorithm $H$ $\exists$ a sequence of loss vectors for $T$ time steps such that the regret with respect to all algorithms is
+$$
+R_{\mathcal{G},\min}=T\left(1-\frac{1}{N}\right).
+$$ 
+\end{theorem}
+\begin{proof}
+At each time step $t$ we look at what an on-line algorithm $H$ would select as a probability distribution.
+
+Then we consider $i_t=\text{arg}\min\limits_i\{p^t_i\}$ (an action that the algorithm selects with the least probability). 
+
+Assign loss 0 to $i_t$ and 1 to all other actions.
+
+Then $\exists$ a general off-line algorithm $\in\mathcal{G}_{all}$ such that at time step $t$ it chooses action $i_t$.
+
+Then the loss vector of this off-line algorithm is 0.
+
+On the other hand, since $\min\limits_i\{p^t_i\}\leq\frac{1}{N}$ the total loss of on-line algorithm for $T$ time steps is at least $T\left(1-\frac{1}{N}\right)$.
+\end{proof}
+\subsection{Warm-up: Deterministic Greedy Algorithms}
+\paragraph{N.B.:}For simplicity we consider $l^t_i\in\{0,1\}$ only.\\
+Recall $L^T_i=\sum\limits_{t=1}^T l^t_i$ is the cumulative loss up to time step $t$ for all actions $i$.
+\begin{definition}[Greedy Algorithm]
+Greedy Algorithm selects greedily an action $\text{arg}\min\limits_{i\in X}L^{t-1}_i$ and tracks the time by index.\\
+Formally:
+\begin{tabbing}
+\hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \=\kill
+\> initialize $x^1=1$\\
+\> {\bf for} $t=1:T$\\
+\>\> set $Z^{t-1}_{\min}=\min\limits_{i\in X}L^{t-1}_i$ and $s^{t-1}=\{i:L^{t-1}_i=Z^{t-1}_{\min}\}$\\
+\>\> set $x^t=\min s^{t-1}$\\
+\>{\bf endfor} \\
+\>{\bf return} the loss incurred
+\end{tabbing}
+\end{definition}
+\begin{theorem}
+For a Greedy algorithm $\forall$ sequence of loss vectors holds
+$$
+L^T_{Greedy}\leq NL^T_{\min}+(N-1).
+$$
+\end{theorem} 
+\begin{proof}
+At each time step $t$  when a Greedy algorithm incurs a loss of 1 and $L^t_{\min}$ does not increase then one action is removed from $s^t$. The size of $s^t$ can decrease at most $N$ times before $L^t_{\min}$ increases by 1. Hence, $L^t_{Greedy}\leq N-|s^t|+NL^t_{\min}$.
+\end{proof}
+The theorem gives a week guarantee.
+
+If we consider deterministic algorithms only we cannot hope to do better.
+\begin{theorem}
+$\forall$ deterministic algorithm $D$ $\exists$ a sequence of loss vectors such that $L^T_D=T$ and $L^T_{\min}\leq\left\lfloor\frac{T}{N}\right\rfloor$. In particular, $L^T_D\geq NL^T_{\min}+(T\mod N)$.
+\end{theorem}
+\begin{proof}
+Consider any deterministic algorithm $D$.\\
+At time step $t$ look at $x^t$ (the action chosen by $D$ at $t$).\\
+Assign loss 1 to $x^t$ and 0 -- to all other actions.\\
+Since $D$ incurs a loss 1 at each time step then $L^T_D=T$.\\
+Now given this loss vector consider $\sum\limits_{i=1}^NL^T_i=T$. Then $\min\limits_i L^T_i\leq\left\lfloor\frac{T}{N}\right\rfloor$.
+\end{proof}
+We have shown that deterministic algorithms are poor. However, if we randomize a deterministic algorithm we can in fact do better.\\
+\subsection{Randomized Algorithms}
+\begin{definition}[Randomized Greedy Algorithm]
+Randomized Greedy (RG) Algorithm chooses uniformly at random among the greedy choices.\\
+Formally:
+\begin{tabbing}
+\hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \=\kill
+\> initialize $p^1_i=\frac{1}{N}$ $\forall i$\\
+\> {\bf for} $t=1:T$\\
+\>\> set $Z^{t-1}_{\min}=\min\limits_{i}L^{t-1}_i$ and $s^{t-1}=\{i:L^{t-1}_i=Z^{t-1}_{\min}\}$\\
+\>\> {\bf if} $i\in s^{t-1}$\\
+\>\>\> set $p^t_i=\frac{1}{|s^{t-1}|}$\\
+\>\> {\bf else} set $p^t_i=0$\\
+\>\>{\bf endif} \\
+\> {\bf endfor}\\
+\>{\bf return} the loss incurred
+\end{tabbing}
+\end{definition}
+\begin{theorem}
+For the RG algorithms $\forall$ sequence of loss vectors holds
+$$
+L^T_{RG}\leq(1+\ln N)L^T_{\min}+\ln N,
+$$
+i.e. an exponential improvement over deterministic algorithms.
+\end{theorem}
+\begin{proof}
+Let $t_j$ be the time when $L^t_{\min}$ is $j$, and $t_{j+1}$ -- when $L^t_{\min}$ is $j+1$.\\
+We have to show what the increase of the GR algorithm during the period $t_{j+1}-t_j$ is.\\
+$\forall t$ we have $1\leq|s^t|\leq N$.\\
+$\forall t\in(t_{j},t_{j+1}]$ the size of $s^t$ shrinks by $k$ (from $n'$ to $n'-k$) and the loss is $\frac{k}{n'}\leq\frac{1}{n'}+\frac{1}{n'-1}+\ldots+\frac{1}{n'-k+1}$.\\
+Then the total loss between $t_j$ and $t_{j+1}$ is at most $\frac{1}{N}+\frac{1}{N-1}+\ldots+\frac{1}{2}+1\leq 1+\ln N$.
+\end{proof}
+To summarize,
+\begin{itemize}
+\item[--] Greedy Algorithms: at most factor $N$
+\item[--] Deterministic Algorithms: at least factor $N$
+\item[--] Randomized Algorithms: at most factor $\log N$
+\end{itemize}
+Although $R_{RG}=\ln N(L^T_{\min}+1)$, $L^T_{\min}$ can still depend on $T$.
+If we think of the average loss it could be still of factor $\log N$.
+Therefore next we would like to describe an algorithm where the average loss $\ra 0$ while $T\ra\infty$.
 
 
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "../main"
 %%% End: 
+
