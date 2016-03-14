@@ -37,7 +37,6 @@ $$
  & \leq & \frac{d - i}{\vert S \vert} + \frac{i}{\vert S \vert} = \frac{d}{\vert S \vert}.
 \end{matrix*}
 $$
-
 \end{proof}
 
 This lemma provides us with a trivial randomized algorithm that proves polynomial identity testing is in $\cc{coRP}$ with oracle access. 
@@ -60,7 +59,6 @@ The following algorithm has the properties of Definition \ref{corpdef} according
 \end{tabbing}
 
 Here $m$ is chosen so that $ \left( d / \vert \mathbb{F} \vert \right) ^ m \leq \frac{1}{2} $.
-
 \end{proof}
 
 Now we turn to another related problem.
@@ -107,7 +105,6 @@ We prove this by reducing the problem to polynomial equivalence check. For each 
 We assign a polynomial to each node and edge of the program. These polynomials are calculated recursively (by dynamic programming to be precise). In the end we use the polynomial we computed for the accepting node as the polynomial corresponding to the program.
 
 We assign the constant polynomial $1$ to the root. For each decision vertex $v$ with corresponding variable $x_v$ and corresponding polynomial $p_v$, we assign to its outgoing edges with labels $0$ and $1$, polynomials $p_v(1-x_v)$ and $p_v x_v$ respectively. For each node other than the root, we assign sum of polynomials of its incoming edges as its polynomial.
-
 \end{proof}
 
 \textbf{Homework:} Show that two read-once branching programs are equivalent if and only if their polynomials are.
