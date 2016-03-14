@@ -17,7 +17,9 @@
     \node [fill=white    ] at ($(dayofweek)  +(0,-\baselineskip)$) (dayofmonth) {#3};
     \node [fill=white    ] at ($(dayofmonth) +(0,-\baselineskip)$) (month)      {#4};
     \node [fill=lightgray] at ($(month)      +(0,-\baselineskip)$) (dayofmonth) {#5};
-  \end{tikzpicture}}}%
+  \end{tikzpicture}}}
+  \addcontentsline{toc}{section}{\thesection\quad #1}
+  % 
 }
 
 %%%%% Graphics %%%%%

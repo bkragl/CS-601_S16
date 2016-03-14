@@ -1,9 +1,10 @@
 \documentclass[a4paper]{article}
 
 \usepackage{a4wide}
-\usepackage{graphicx}
 \setlength{\parindent}{0mm}
-% \usepackage{showframe}
+
+\usepackage[titles]{tocloft}
+\setlength{\cftbeforesecskip}{1mm}
 
 \input{packages}
 \input{macros}
@@ -15,6 +16,10 @@
 \date{Spring 2016}
 
 \maketitle
+
+\renewcommand{\contentsname}{Lectures}
+\setcounter{tocdepth}{1}
+\tableofcontents
 
 \input{lectures/lecture_1}
 \input{lectures/lecture_2}
