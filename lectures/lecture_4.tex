@@ -1,0 +1,140 @@
+\lecture{Randomized Weighted Majority Algorithms}{Wed}{9}{Mar}{2016}
+
+We will present an algorithm which will have almost optimal regret.
+
+RG algorithms show bad performance because they could randomize but with a small possible support among greedy choices.
+\begin{definition}[Randomized Weighted Majority Algorithms]
+If an action $i$ gives a loss $L_i$ then Randomized Weighted Majority (RWM) Algorithm assigns a weight $w_i=(1-\eta)^{L_i}$. The probability of action $i$ is then $p_i=w_i\left/\sum\limits_{i=1}^Nw_i\right.$. Parameter $\eta$ is being optimized with $w_i\in\{0,1\}$.\\  
+Formally:
+\begin{tabbing}
+\hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \=\kill
+\> initialize $p^1_i=\frac{1}{N}$ and $w^1_i=1$ $\forall i\in x$\\
+\> {\bf for} $t=1:T$\\
+\>\> {\bf if} $l^{t-1}_i=1$\\
+\>\>\> set $w^t_i=w^{t-1}_i(1-\eta)$\\
+\>\> {\bf else} set $w^t_i=w^{t-1}_i$\\
+\>\>{\bf endif} \\
+\>\> set $p^t_i=w^t_i/W^t,$ where $W^t=\sum\limits_{i-1}^Nw^t_i$\\
+\> {\bf endfor}\\
+\>{\bf return} the loss incurred
+\end{tabbing}
+\end{definition}
+\begin{theorem}
+For $\eta\leqslant\frac{1}{2}$ the loss of RWM algorithm $\forall$ sequence of loss vectors is
+$$
+L_{RWM}\leqslant(1+\eta)L^T_{\min}+\frac{\ln N}{\eta}.
+$$
+\end{theorem}
+\begin{remark}
+Suppose we have proven the theorem. Then $\eta=\min\left\{\frac{1}{2}\sqrt{\frac{\ln N}{T}}\right\}\Ra L_{RWM}\leqslant L^T_{\min}+2\sqrt{T\ln N}\Ra R\leqslant 2\sqrt{T\ln N}\Ra\frac{R}{T}\ra_{T\ra\infty}$.
+\end{remark} 
+\begin{remark}
+Suppose $T$ is not known in advance. Then repeat doubling: $T=2$, $T=4$, $T=8$, and so on. As a result we will only add a constant factor.
+\end{remark}
+\begin{proof}
+The key is to analyse $W^t$ (the total weight).\\
+If significant loss is incurred then $W^t$ drops significantly.\\
+$$
+W^{T+1}\geqslant\max\limits_i w^{T+1}_i=(1-\eta)^{L^T_{\min}}
+$$
+Denote $F^t=\sum\limits_{i:l^t_i=1}w^t_i/W^t$ -- a fraction of the total weight on actions that incur loss 1 at time $t$ (i.e. expected loss of RWM at $t$).\\
+Each action with a loss is multiplied by $(1-\eta)$. $W^1=N$.
+$$
+W^{t+1}=W^t-\eta F^tW^t
+$$ 
+$$
+\Ra (1-\eta)^{L^T_{\min}}=W^1\prod\limits_{t=1}^T(1-\eta F^t)=N\prod\limits_{t=1}^T(1-\eta F^t).
+$$
+$$
+L^T_{\min}\ln (1-\eta)\leqslant\ln N+\sum\limits_{t=1}^T(1-\eta F^t)\leqslant\{\ln(1-z)\leqslant-z\}\leqslant\ln N-\sum\limits_{t=1}^T\eta F^t=\ln N-\eta L_{RWM}
+$$
+Hence, $L_{RWM}\leqslant-\frac{\ln(1-\eta)}{\eta}L^T_{\min}+\frac{\ln N}{\eta}\leqslant\{-\ln(1-z)\leqslant z+z^2\forall z\in[0,\frac{1}{2}]\}\leqslant(1+\eta)L^T_{\min}+\frac{\ln N}{\eta}$.
+\end{proof}
+\subsection{Two Lower Bounds}
+\begin{theorem}
+Consider $T\leq\log_2N$. Then $\exists$ a stochastic generation of losses such that $\forall$ on-line algorithm $H$ holds
+$$
+E\left[L^T_H\right]=\frac{T}{2},
+$$
+yet $L^T_{\min}=0$.
+\end{theorem}
+\begin{proof}
+\begin{itemize}
+\item[t=1:] randomly selected $x_1$ of size $\frac{N}{2}$ gets loss 0, others get loss 1.
+\item[t=2:] from $x_1$ randomly selected $x_2$ of size $\frac{N}{4}$ gets loss 0, others get loss 1.
+\item[] \ldots
+\end{itemize}
+As on-line algorithm incurs loss $\frac{1}{2}$ $E\left[L^T_H\right]=\frac{T}{2}$.\\
+Only for $T\leq\log_2N$ since an action always gets a loss 0.
+\end{proof}
+\paragraph{N.B.:} The upper bound works even for the loss vectors chosen adversary. The lower bound works even for stochastic vectors.
+\begin{theorem}
+Consider $N=2$. Then $\exists$ a stochastic generation of loss vectors such that $\forall$ on-line algorithm $H$ holds
+$$
+E\left[L^T_H-L^T_{\min}\right]=\Omega(\sqrt{T}).
+$$
+\end{theorem}
+\begin{proof}
+Consider a flip of coin $z_1=\{1,0\}$, $z_2=\{0,1\}$.\\
+$\forall t$ choose $z_1$ and $z_2$ with probability $\frac{1}{2}$ $\Ra E\left[L^T_H\right]=\frac{T}{2}$.\\
+In other words, we consider a Binomial distribution with $n$ trials, where $n=T$ and $p=\frac{1}{2}$, $1-p=\frac{1}{2}$. Then expected value is $\mu=np=\frac{T}{2}$ and variance $\text{Var}=np(1-p)\frac{T}{4}\Ra\sigma=\frac{\sqrt{T}}{2}\Ra L^T_{\min}\leqslant\frac{T-\sqrt{T}}{2}$.
+\end{proof}
+\subsection{Zero-Sum Games}
+Consider a matrix game where player 1 chooses a probability distribution from $x_1$, and player 2 -- from $x_2$.\\
+\begin{tabular}{c|ccc|}
+& & $x_2$ &\\
+\hline
+& & &\\
+\hline
+$x_1$ & & $s_1$ &\\
+\hline
+& & &\\
+\hline
+\end{tabular}
+$s_1(x_1,x_2)$ is the loss of player 1 and $s_2(x_1,x_2)=-s_1(x_1,x_2)$.\\
+
+Denote $\Delta(x_i)$ -- a set of probability distributions over $x_i$.
+$$
+v^1_{\min}=\max\limits_{z\in\Delta(x_2)}\min\limits_{x_1\in X_1}E_{x_2\sim Z}[s_1(x_1,x_2)]=\max\limits_{z\in\Delta(x_2)}\min\limits_{x_1\in X_1}\sum\limits_{x_2\in X_2}z(x_2)s_1(x_1,x_2).
+$$
+In this case player 1 has an advantage of taking an action after player 2 makes the choice.
+$$
+v^1_{\max}=\min\limits_{z\in\Delta(x_1)}\max\limits_{x_2\in X_2}E_{x_1\sim Z}[s_1(x_1,x_2)]
+$$
+$$
+v^2_{\min}=\max\limits_{z\in\Delta(x_1)}\min\limits_{x_2\in X_2}E_{x_1\sim Z}[s_2(x_1,x_2)]
+$$
+$$
+v^2_{\max}=\min\limits_{z\in\Delta(x_2)}\max\limits_{x_1\in X_1}E_{x_2\sim Z}[s_2(x_1,x_2)]
+$$
+\begin{definition}[Inequality 1]
+$$
+v^1_{\min}\leqslant v^1_{\max}
+$$
+\end{definition}
+\begin{definition}[Inequality 2]
+$$
+v^2_{\min}=-v^1_{\max}
+$$
+\end{definition}
+The goal is to show that $-v^1_{\min}=v^1_{\max}$.\\
+$(p^t_1,p^t_2)$ -- probability distributions. Then loss at action $j$ for player 1 is
+$$
+l^t_{j,1}=E_{x^t_2\sim p^t_2}[s_1(x_1,x^t_2)]=\sum\limits_kp^t_{2,k}s_1(x_1,x_2).
+$$
+\begin{theorem}
+Players play for $T$ steps using procedure with external regret $R$. Then average loss is $v^1_{\min}+R/T$.
+\end{theorem}
+\begin{proof}
+Let $q$ be the mixed strategy of observed frequencies $q_j=\sum\limits_{t=1}^T p^t_{2,j}/T$.\\
+Then $\exists x_k\in X_1$ such that $E_{x_2\sim q}[s_1(x_1,x_k)]\leqslant v^1_{\min}$.\\
+If player 1 always plays $x_k$ then $v^1_{\min}T\Ra L^T_{\min}\leqslant L^T_k\leqslant v^1_{\min}T\Ra L^T_H\leqslant L^T_{\min}+R\Ra$ average loss is $L^T_H\leqslant v^1_{\min}+R/T=v^1_{\min}+\sqrt{\ln N/T}$.
+\end{proof}
+Example: $v^1_{\max}=v^1_{\min}+\gamma$, where $\gamma>0$. $R/T<\gamma/2=0.5$. If $v^1_{\min}=5$ and $v^1_{\max}=7$ then $v^2_{\min}=-7$.
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../main"
+%%% End: 
