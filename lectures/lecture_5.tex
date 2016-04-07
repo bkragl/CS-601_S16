@@ -1,0 +1,110 @@
+\lecture{Balls and Bins and Probabilistic Inequalities	}{Mon}{14}{Mar}{2016}
+
+
+\begin{definition}[whp] Whp stands for With High Probability and by this we mean with probability greater than $1 - \frac{1}{p(n)}$ for some polynomial $p$.
+\end{definition}
+
+\begin{theorem}[Union Bound]
+Given some events $A_1, A_2, \ldots, A_n$, 
+$$\Pr\left[\bigcup_{1 \leq i \leq n} A_i\right] \leq \sum_{i=1}^{n} \Pr[A_i].$$
+\end{theorem}
+
+\subsection{Balls and Bins}
+
+We investigate the problem of balls and bins in which we have $m$ balls and $n$ bins and we throw each ball to one of the bins, chosen uniformly at random. We are interested in the max load, i.e. number of balls in the fullest bin. This problem is significant because of its applications in load balancing and hashing.
+
+The following theorem is very handy and will be used several times:
+\begin{theorem}[Stirling's Approximation]
+For large enough $n$ and $k$, we have
+$$\left( \frac{n}{k} \right)^k \leq \binom{n}{k} \leq \left( \frac{n e}{k} \right)^k.$$
+
+\end{theorem}
+
+We first investigate the case where $m = n$. 
+\begin{proposition} When throwing $n$ balls into $n$ bins, maximum load is $O(\frac{\log n}{\log \log n})$ whp.
+\end{proposition} 
+\begin{proof}
+We first find an upper-bound for the probability of a fixed bin $i$ getting exactly $k$ balls using Stirling's approximation:
+$$\Pr[\text{bin } i \text{ gets exactly } k \text{ balls}] = \binom{n}{k} \left( \frac{1}{n}\right)^k \left( \frac{n-1}{n}\right)^{n-k} \leq \binom{n}{k} \left( \frac{1}{n}\right)^k \leq \left( \frac{e}{k} \right)^k,$$
+
+So 
+
+$$\Pr[\text{bin } i \text{ gets at least } k \text{ balls}] = \sum_{j \geq k} \Pr[\text{bin } i \text{ gets exactly } j \text{ balls}] \leq$$
+$$ \leq
+\sum_{j \geq k} \left( \frac{e}{j} \right)^j  \leq \left( \frac{e}{k}\right)^k \left( 1 + \frac{e}{k} + \left(\frac{e}{k} \right)^2 + \ldots \right) = O\left( \left( \frac{e}{k} \right)^k \right)
+$$
+
+Where the last equality works for big enough $k$, e.g. $k \geq 2 e$.
+
+Now let $k' = \frac{4 \log n}{\log \log n} \geq \sqrt{\log n}$, then we have the following bound:
+$$
+\left( \frac{1}{k'} \right)^{k'} \leq \left( \frac{1}{\sqrt{\log n}} \right)^{\frac{4 \log n}{\log \log n}} = \left( \frac{1}{2} \right) ^{2 \log n} \leq \frac{1}{n^2}
+$$
+
+Now if we let $k = e k' = \frac{4 e \log n}{\log \log n}$, then $\left( \frac{e}{k}\right)^k \leq \frac{1}{n^2}$ and so $\Pr[\text{bin } i \text{ gets at least } k \text{ balls}] \leq \frac{1}{n^2}$ and by union bound we get $\Pr[\text{some bin } \text{ gets at least } k \text{ balls}] \leq \frac{1}{n}$. This proves a maximum load of $O\left( \frac{\log n}{\log \log n} \right)$ whp.
+
+\end{proof}
+
+We now turn to some probability inequalities. Remember that if $X_i$'s are some random variables, then
+\begin{itemize}
+\item $E[\sum X_i] = \sum E[X_i]$,
+\item $E[X_1 X_2] = E[X_1] E[X_2]$ if $X_1$ and $X_2$ are independent, and
+\item if $X_i$'s are pairwise independent then $\Var [\sum X_i] = \sum \Var [X_i]$.
+\end{itemize}
+
+\begin{theorem}[Markov's inequality]
+Let $X$ be a nonnegative valued random variable. Then for all $t \in \setR^+$, $\Pr[X \geq t] \leq \frac{E[X]}{t}$ or equivalently $\Pr[X \geq t E[X]] \leq \frac{1}{t}$.
+\end{theorem}
+\begin{proof}
+Define the function $f: \setR \rightarrow \{0, 1\}$ as follows:
+$$ f(x) = \left\{\begin{matrix}
+1 & X \geq t \\
+0 & \text{otherwise}
+\end{matrix}\right..$$
+
+Now we have:
+$$\Pr[X \geq t] = E[f(X)] \leq E\left[\frac{X}{t}\right] = \frac{1}{t} E[X].$$
+
+\end{proof}
+
+\begin{theorem}[Chebyshev's inequality]
+Let $\mu = E[X]$ and $\sigma^2 = \Var[X]$, then $$\Pr[\vert X - \mu \vert \geq k \sigma] \leq \frac{1}{k^2}.$$
+\end{theorem}
+\begin{proof}
+Let $Y = (X - \mu)^2$, we know that $E[Y] = E[\vert X - \mu \vert ^2] = \Var(X) = \sigma^2$ and $\Pr[\vert X - \mu \vert \geq k \sigma] = \Pr[\vert X - \mu \vert^2 \geq k^2 \sigma^2] = \Pr[Y \geq k^2 E[Y]] \leq \frac{1}{k^2}.$
+\end{proof}
+
+Consider the problem of throwing $m$ balls into $n$ bins as an example and let $X$ be the number of balls in bin number 1, so $E[X] = \frac{m}{n}$, then by Markov's inequality $\Pr[X \geq \frac{2m}{n}] \leq \frac{1}{2}$. Let $Y_i$ be the indicator variable that ball number $i$ is in bin number one, then $X = \sum Y_i$ and so $E[X^2] = E[\sum Y_i^2 + \sum_{i \neq j} Y_i Y_j] = \frac{m}{n} + m \frac{m-1}{n}.$
+
+\begin{proposition} In the problem of throwing $n$ balls into $n$ bins, the maximum load is $\Omega\left( \frac{\log n}{\log \log n} \right)$ whp.
+\end{proposition}
+\begin{proof}
+We now use the other side of Stirling's approximation:
+$$\Pr[\text{bin } i \text{ gets exactly } k \text{ balls}] = \binom{n}{k} \left( \frac{1}{n}\right)^k \left( \frac{n-1}{n}\right)^{n-k} \geq \binom{n}{k} \left( \frac{1}{n} \right)^k \left( 1 - \frac{1}{n}\right)^n \geq \binom{n}{k} \left(\frac{1}{n}\right)^k \frac{1}{e} \geq$$
+$$
+\geq \left(\frac{n}{k} \right)^k \left( \frac{1}{n} \right)^k \frac{1}{e} = \frac{1}{e} \left(  \frac{1}{k}\right)^k.
+$$
+
+Now let $k = \frac{\log n}{3 \log \log n} \leq \log n$, we have $\left( \frac{1}{k} \right)^k \geq \left(\frac{1}{2}\right)^{\frac{\log n}{3}} \geq \frac{1}{n^{1/3}}.$
+
+Let $X_i$ be the indicator variable that bin $i$ has at least $k$ balls and $Y_i$ the indicator variable that bin $i$ contains exactly $k$ balls. Let $X = \sum X_i$, then $E[X] = \sum E[X_i] \geq \sum E[Y_i] \geq \frac{n}{n^{1/3}}$ which means $E[X] \in \Omega(n^{2/3}).$
+
+Now let us use Chebyshev's inequality:
+$$\Pr[X = 0] = \Pr[\vert X - \mu \vert \geq \mu] \leq \frac{\sigma^2}{\mu^2} = \frac{\Var[X]}{\mu^2} = \frac{\sum \Var[X_i] + \sum_{i \neq j} \Cov[X_i, X_j]}{\mu^2},$$
+
+Now since all the covariances are non-positive, we can write:
+$$\Pr[X = 0] \leq \frac{\sum \Var[X_i]}{\mu^2} \leq \frac{n}{\mu^2} \leq \frac{n}{n^{4/3}} = \frac{1}{n^{1/3}}.$$
+
+Thus whp $X \neq 0$ and maximum load is at least $k$.
+
+\end{proof}
+
+\subsection{Coupon Collector's Problem}
+There is a bag with $n$ types of coupons, containing infinitely many coupons of each type. You can pick coupons from the bag and by each pick you get a coupon of one of the types with uniform probability. You win when you have at least one coupon of each type.
+
+Let $T$ denote the random variable of the number of coupons that you pick. We can write $T = \sum_{i=1}^{n} T_i$, where $T_i$ denotes the additional number of coupons that we need to pick in order to pass from $i-1$ to $i$ different types of coupons in our collection. Since we are considering the case of a uniform distribution it follows that when $i$ distinct coupon types have been collected, a new picked coupon will be of a new type with probability $\frac{n-i}{n}$. The variables $T_i$ are independent and geometrically distributed with $p_i = \frac{n-i+1}{n}$ and $E[T_i] = \frac{1}{p_i}$, so $E[T] = \sum E[T_i] = n H_n = O(n \log n).$ 
+
+By Markov's inequality we have $\Pr[T \geq c n H_n] \leq \frac{1}{c}$. Also $$\Var(T) = \sum \Var[T_i] = \sum \frac{1 - p_i}{p_i^2} \leq n^2 \left( 1 + \frac{1}{2^2} + \frac{1}{3^2} + \ldots \right) = \frac{\pi^2}{6}  n^2.$$
+
+Now by applying Chebyshev's inequality we get:
+$$\Pr[\vert T - n H_n\vert \geq c n] \leq \frac{\pi^2}{6c^2}.$$
