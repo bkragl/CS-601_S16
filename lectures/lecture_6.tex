@@ -1,0 +1,105 @@
+\lecture{Chernoff Bound and The Power of Two Choices}{Wed}{16}{Mar}{2016}
+
+\begin{theorem}[Chernoff Bound]
+Let $X_1, X_2, \ldots, X_n$ be independent 0/1 valued random variables. Let $p_i = E[X_i], X = \sum_{i=1}^n X_i$ and $\mu = \sum_{i=1}^n p_i = E[X]$, then:
+\begin{itemize}
+\item for $\delta > 0$, $\Pr[X \geq (1+ \delta) \mu] \leq e^{\frac{-\delta^2}{2+\delta} \mu}$,
+\item for $0 < \delta < 1$, $\Pr[X \leq (1- \delta) \mu] \leq e^{\frac{-\delta^2}{2}\mu}.$
+\end{itemize}
+\end{theorem}
+\begin{proof}
+We introduce a dummy variable $t$. 
+$$E\left[e^{tX}\right] = E\left[\prod e^{tX_i}\right] = \prod E\left[ e^{tX_i} \right]$$
+The latter equality holds because $X_i$'s are independent. Now since $X_i$'s are 0/1 variables we have $E\left[e^{tX_i}\right] = p_i e^t + (1- p_i) = 1 + p_i (e^t -1 )$ so
+$$
+E\left[ e^{tX} \right] =  \prod E\left[ e^{tX_i} \right] = \prod \left(1 + p_i (e^t -1)\right)
+\leq \prod e^{p_i (e^t - 1)} = e^{\mu (e^t - 1)}.$$
+The final inequality was derived by using the well known $e^x \geq 1+x$. Now by Markov's inequality we get:
+$$\Pr[X \geq (1 + \delta) \mu] = \Pr[e^{tX} \geq e^{t (1+ \delta) \mu}] \leq \frac{e^{\mu (e^t -1)}}{e^{t (1+\delta) \mu}}$$
+Let's choose $t = \ln (1+ \delta)$ then we get:
+$$
+\Pr[X \geq (1+ \delta) \mu] \leq \left(\frac{e^{\delta}}{(1+\delta)^{(1+\delta)}}\right)^\mu
+$$
+Now take the logarithm of the rightmost term:
+$$
+\ln \left(\left(\frac{e^{\delta}}{(1+\delta)^{(1+\delta)}}\right)^\mu\right) = \mu (\delta - (1+\delta) \ln (1+\delta)) \leq \mu \frac{-\delta^2}{1+\delta}.
+$$
+The final inequality is because of the inequality $\ln (1+x) \geq \frac{x}{1+ x/2}$ and leads to the first desired result. For the second, we can do a similar analysis and use the inequality $\ln (1-x) \geq -x + \frac{x^2}{2}$ at the end.
+\end{proof}
+
+This leads to the following result:
+In the problem of throwing $m$ balls into $n$ bins, if $m = c n \log n$ and $X_i$ is the indicator variable that ball $i$ is in bin $j$ and $X = \sum X_i$, then $E[X] = E\left[\sum X_i \right] = c \log n$ and $\Pr[X \geq 1.5 c \log n] \leq e^{a \log n}$ and $\Pr[X \leq 0.5 c \log n] \leq e^{a \log n}$ and both these probabilities can be made less than $\frac{1}{n^2}$. 
+
+\subsection{Power of Two Choices}
+We now change the problem of bins and balls a little. The objective is to throw $n$ balls into $n$ bins one by one. For every ball we choose two bins uniformly at random, inspect the bins and throw the ball into the bin with lesser load. Ties are broken arbitrarily. We claim that the maximum load is $O(\log \log n)$ whp.
+
+We first provide an intuitive and informal argument. We say a ball has height $i$, if it is the $i$-th ball that was thrown into its bin. Let $N_i$ be the number of bins with at least $i$ balls and assume $\frac{N_i}{N} = \alpha_i$. Now the probability that a fixed ball has height at least $i+1$ is at most $\alpha_i^2$, since to place a ball at height $i+1$ or above, we would have to select two bins both with balls of height at least $i$. So we roughly have $\alpha_{i+1} \approx \alpha_i^2$. Also, since at most half of the bins can have two balls or more, $\alpha_2 \leq \frac{1}{2}$. Solving this recurrence equation leads to 
+$\alpha_i \approx \frac{1}{2^{2^{i-1}}}$, this gives $\alpha_{\log \log n} \lesssim
+\frac{1}{n}$.
+
+We now give a formal proof of the claim.
+\begin{proposition}
+The maximum load is $O(\log \log n)$ whp.
+\end{proposition}
+\begin{proof}
+We use a random graph process to prove this. We build the graph $G$ iteratively as follows:
+\begin{itemize}
+\item There is one vertex per bin,
+\item When a ball probes two bins we put an edge between their respective vertices.
+\end{itemize}
+
+We prove that if we place $\frac{n}{512}$ balls into $n$ bins, then the maximum load is $O(\log \log n)$ whp. Since merging every $512$ consecutive bins together will increase the maximum load by a constant factor, this means that for $n$ balls into $n$ bins we get a maximum load of $O(\log \log n)$.
+
+We use the following two lemmas to prove this.
+\begin{lemma}\label{lemma57}
+Size of $G$'s largest connected component is $O(\log n)$ whp.
+\end{lemma}
+\begin{lemma}\label{lemma58}
+For all subsets $S$ of the vertex set with $\vert S \vert \geq k$, the induced graph $G[S]$ has average degree at most $5$ whp. Here $k$ is a constant.
+\end{lemma}
+
+Now once we have the graph, suppose that we remove all vertices of degree at most $10$ and then repeat this process until we run out of vertices to remove. We claim that this process ends after $O(\log \log n)$ repetitions whp. 
+
+To prove this, assume the preceding lemmas. Now look at a component $C$ of $G$. As long as we have at least $k$ vertices in $C$, its average degree is at most 5 whp, so the number of nodes with degrees of at least $10$ is at most $\frac{\vert C \vert}{2}$. This is a straightforward usage of Markov's inequality. So as long as we have at least $k$ nodes in a component, we will remove at least half of the nodes in the component. Number of these rounds is $O(\log(\frac{\vert C\vert}{k}))$ and that is $O(\log \vert C\vert)$, but since $C = O(\log n)$, after $O(\log \log n)$ steps we are down to $k$ nodes.\footnote{This is still true whp, because we have at most $n$ connected components and we can use the union bound and lemma \ref{lemma58}'s proof.}
+
+We now claim that if a node survives $i$ rounds of this process, then its load due to the already removed edges (balls) is at most $10i$. 
+
+To see this, note that the balls removed in the first round have a height of at most 10. After removing these balls, the ones that are removed in the second round have a height of at most 10, so they initially had a height of at most 20, since in each bin at most 10 balls could be removed. Continuing this argument inductively proves the claim.
+
+So the maximum load is no more than $10r + k$, where $r$ is the number of rounds. This proves that whp the maximum load is $O(\log \log n)$. We now just need to prove the lemmas.
+
+\end{proof}
+
+\begin{proof}[Proof of Lemma \ref{lemma57}]
+We have a graph with $n$ vertices and $m = \frac{n}{512}$ edges where we connect vertices at random. Fix a subset $S$ of size $k+1$ of vertices. We have:
+$$
+\Pr[S\text{ is connected}] \leq \Pr[\text{There are at least } k \text{ edges in the } k+1 \text{ vertices of } S] \leq
+$$
+$$
+\leq \binom{m}{k} \left(\frac{\binom{k+1}{2}}{\binom{n}{2}}\right)^k \leq \binom{m}{k} \left( \frac{4k^2}{n^2} \right)^k
+$$
+
+Now we apply the union bound to get:
+$$
+\Pr[\text{There exists a connected component of } k+1 \text{ vertices}] \leq \binom{n}{k+1} \binom{m}{k} \left( \frac{4k^2}{n^2} \right)^k \leq$$ $$\leq n \left(\frac{ne}{k} \right)^k \left(\frac{ne}{512k} \right)^k \left(\frac{4k^2}{n^2} \right)^k = n \left(\frac{4e^2}{512} \right)^k \leq \frac{1}{n^2},
+$$
+for $k = O(\log n)$.
+
+\end{proof}
+
+\begin{proof}[Proof of Lemma \ref{lemma58}]
+We want to show that the average degree of the graph $G[S]$ induced by a subset $S$ of vertices is no more than 5 whp as long as $\vert S \vert \geq k$, for some fixed $k$.
+
+If $G[S]$ has an average degree greater than 5, then it must have at least $\frac{5}{2}\vert S \vert$ edges. We now bound the probability that $S$ gets at least $\frac{5}{2}\vert S \vert$ edges.
+
+$$
+\Pr[\text{A fixed subset of size } k \text{ of the vertices gets at least } \frac{5}{2}k \text{ edges}] \leq \binom{m}{5k/2} \left( \frac{k^2}{n^2}\right)^{5k/2}
+$$
+
+As before the probability that such a set exists can be bounded again by the union bound. This probability is at most:
+$$\binom{n}{k} \binom{m}{5k/2} \left( \frac{k}{n}\right)^{5k} \leq
+\left( \frac{ne}{k} \right)^k \left( \frac{ne}{512 \times 5k/2} \right)^{5k/2} \left( \frac{k}{n} \right)^{5k} \leq \left( \frac{k}{n} \right)^{3k/2} \alpha^k,
+$$
+for some constant $\alpha < 1$.
+
+\end{proof}
