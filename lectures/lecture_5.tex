@@ -53,10 +53,10 @@ We now turn to some probability inequalities. Remember that if $X_i$'s are some 
 \end{itemize}
 
 \begin{theorem}[Markov's inequality]
-Let $X$ be a nonnegative valued random variable. Then for all $t \in \setR^+$, $\Pr[X \geq t] \leq \frac{E[X]}{t}$ or equivalently $\Pr[X \geq t E[X]] \leq \frac{1}{t}$.
+Let $X$ be a nonnegative valued random variable. Then for all $t \in \Real^+$, $\Pr[X \geq t] \leq \frac{E[X]}{t}$ or equivalently $\Pr[X \geq t E[X]] \leq \frac{1}{t}$.
 \end{theorem}
 \begin{proof}
-Define the function $f: \setR \rightarrow \{0, 1\}$ as follows:
+Define the function $f: \Real \rightarrow \{0, 1\}$ as follows:
 $$ f(x) = \left\{\begin{matrix}
 1 & X \geq t \\
 0 & \text{otherwise}
