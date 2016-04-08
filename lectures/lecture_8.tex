@@ -1,0 +1,91 @@
+\lecture{The Probabilistic Method (Lovász Local Lemma)}{Wed}{6}{Apr}{2016}
+
+So far we have seen how randomness can help in improving efficiency (e.g. faster algorithms, smaller maximum load in balls and bins when employing power of choice, simpler algorithm for min cut problem and so on).
+
+Probabilistic method is a non-constructive method for proving existential statements. It was pioneered by Paul Erd\H os.
+
+The key idea is the following: Say we want to show that out of a certain family of objects, at least one object has some desired property. If we prove that a random object from that family has that property with positive probability, it means that at least one object with the desired proper exists. It doesn't give any guidelines as for how to actually find that object, though.
+
+One of the classical tools of probabilistic methods is a so-called Lovász Local Lemma (LLL). In this lecture, we state LLL, show one application, then prove LLL and then show one more application.
+
+Suppose we are given events $A_1,\dots,A_n$, each having a probability at most $p<1$, that we want to avoid. If all the events are independent then $$\Pr\Big[\bigwedge_{i=1}^n \overline{A_i}\Big]\geq (1-p)^n>0,$$ so they can be all avoided simultaneously. Lovász Local Lemma allows us to draw the same conclusion when there is some (limited) dependency among the events. (Note that in general, if the events are dependent and $p>1/n$ then it might be impossible to avoid all the events.)
+
+\begin{definition} We say that an event $A$ is independent of a set $\{B_1,\dots,B_n\}$ of events provided that $\Pr[A]=\Pr[A\mid \bigwedge_{i\in I} B_i]$ for any subset $I\subseteq\{1,\dots,n\}$.\end{definition}
+
+\begin{lemma} (Lovász Local Lemma) Let $A_1,\dots,A_n$ be (bad) events. Suppose that for every $i=1,\dots,n$ we have $\Pr[A_i]\leq p<1$ and that each $A_i$ is independent of all but at most some $d$ other events. If
+$$ep(d+1)\leq 1\qquad{\rm then}\qquad \Pr\Big[\bigwedge_{i=1}^n \overline{A_i}\Big]>0.$$
+\end{lemma}
+
+\begin{remark}  If the term $ep(d+1)$ is replaced by $4pd$, we get a different (also valid) version of LLL.
+\end{remark}
+
+Before we prove the lemma, let's see some application.
+A formula $\varphi$ is in Conjunctive Normal Form (CNF) if it is a conjunction of clauses $C_1\wedge \dots\wedge C_m$, each clause being a disjunction of literals (e.g. $C_1=x_1\vee \overline{x_4}\vee\dots\vee x_9$). Recall that literal is either a variable $x_i$ or its negation $\overline{x_i}$. Given $k\geq 1$, we say that $\varphi$ is a $k$-CNF formula provided that each clause contains exactly $k$ literals (and it doesn't contain both a variable and its negation). Finally, we say that a formula is satisfiable if there exists a truth assignment of variables that makes the formula evaluate to 1.
+
+Now we can state our first application of LLL.
+
+\begin{claim} Consider any instance $\varphi$ of a $k$-CNF formula with no variable appearing in more than $2^{k-2}/k$ clauses. Then $\varphi$ is satisfiable. 
+\end{claim}
+\begin{remark}
+Note that the statement of the claim is independent of the number $n$ of variables as well as the number $m$ of clauses. Numerically, for $k=10$ we allow each variable in 25 clauses and for $k=15$ we allow each variable in 540 clauses.
+\end{remark}
+
+\begin{proof} Consider (uniformly) random truth assignment of all the variables. For $i=1,\dots,m$ set $A_i\equiv$ ``clause $C_i$ is not satisfied''. Then for each $i=1,\dots,n$ we have $\Pr[A_i]=\frac1{2^k}=:p$. Note that if two clauses $C_i$, $C_j$ don't share any variables then $A_i$ and $A_j$ are independent. Since every clause contains $k$ literals and every variable appears in at most $2^{k-2}/k$ clauses, every fixed $A_i$ can only be dependent on at most $k\cdot 2^{k-2}/k=2^{k-2}=:d$ other clauses. Since $4\cdot p\cdot d=4\cdot 2^{k-2}/2^k=1$, by LLL there exists a satisfying truth assignment.
+\end{proof}
+
+Before proving LLL, we prove an auxiliary lemma.
+
+\begin{lemma} Let $A_1,\dots,A_n$ be as in the statement of LLL.
+Assume $ep(d+1)\leq 1$. Then for all proper subsets $S\subsetneq\{1,\dots,n\}$ and for every $i\in\{1,\dots,n\}$ we have
+$$\Pr\left[A_i \,\Big|\, \bigwedge_{j\in S} \overline{A_j}\right] \leq\frac1{d+1}.
+$$
+\end{lemma}
+\begin{proof}
+By induction on $S$. For $|S|=0$, the assumption gives $$\Pr[A_i]=p\leq\frac1{e(d+1)}<\frac1{d+1}.$$
+Next we turn to the induction step. Partition $S$ into sets $S_1$, $S_2$ such that $|S_1|\leq d$ and $A_i$ is independent of $S_2$. Recall a formula
+$$\Pr[A\mid B\cap C]=\frac{\Pr[A\cap B\mid C]}{\Pr[B\mid C]}
+$$
+that holds for any three events $A$, $B$, $C$ (after rewriting the conditional probabilities, both sides evaluate to $\Pr[A\cap B\cap C]/\Pr[B\cap C]$). Applying the formula to the left-hand side of the lemma statement and partitioning according to $S_1$ and $S_2$ we get
+$$
+\Pr\left[A_i \,\Big|\, \bigwedge_{j\in S} \overline{A_j}\right] = \frac{\Pr\left[ A_i\wedge \bigwedge_{j\in S_1} \overline{A_j} \mid \bigwedge_{k\in S_2} \overline{A_k} \right]} {\Pr\left[ \bigwedge_{j\in S_1} \overline{A_j} \mid \bigwedge_{k\in S_2} \overline{A_k} \right]}.
+$$
+Denote the numerator and denominator by $N$, $D$, respectively.
+
+Since all events in $S_2$ are independent of $A_i$, for the numerator we have $$N\leq \Pr\left[ A_i \,\Big|\,  \bigwedge_{j\in S_2} \overline{A_j} \right]=\Pr[A_i]\leq p.$$
+
+For the denominator, set $S_i=\{j_1,j_2,\dots, j_r\}$ for some $r\leq d$ and recall the chain rule
+$$\Pr[X_1\wedge X_2\wedge\dots\wedge X_r]=\Pr[X_1]\cdot \Pr[X_2\mid X_1]\cdots\Pr[X_r\mid X_1\wedge \dots\wedge X_{r-1}]$$
+to rewrite
+\begin{align*}
+D&=\prod_{l=1}^r \Pr\left[\overline{A_{j_l}} \,\Big|\,  \left(\bigwedge_{i<l} \overline{A_{j_i}}\right)\wedge \left(\bigwedge_{k\in S_2} \overline{A_k}\right)\right]=\prod_{l=1}^r\left(1-\Pr\left[A_{j_l}\,\Big|\,   \left(\bigwedge_{i<l} \overline{A_{j_i}}\right)\wedge \left(\bigwedge_{k\in S_2} \overline{A_k}\right)\right] \right)\\
+&\geq \left(1-\frac1{d+1}\right)^d>\frac1e,\\
+\end{align*}
+where in the first inequality we used (strong) induction.
+
+Combining these two bounds we get
+\[ \frac ND <\frac p{1/e} =ep\leq\frac1{d+1}. \qedhere \]
+\end{proof}
+
+Now we easily finish the proof of LLL.
+\begin{proof}(Of LLL) By chain rule and the previous lemma,
+\[
+\Pr\left[\bigwedge_{i=1}^n \overline{A_i}\right]=\prod_{i=1}^n\left( 1-\Pr\left[A_i\,\Big|\, \bigwedge_{j<i} \overline{A_j}\right] \right)\geq \left(1-\frac1{d+1}\right)^n>0. \qedhere
+\]
+\end{proof}
+
+Finally, we show another application of LLL. Recall that given a positive integer $k$, a directed graph $G$ is said to be $k$-regular if every node has both indegree and outdegree equal to $k$.
+\begin{claim} Let $G$ be a $k$-regular directed graph. Then $G$ contains at least $$\left\lfloor\frac{k}{3\log k}\right\rfloor$$ vertex-disjoint directed cycles.
+\end{claim}
+\begin{proof} For $k\leq 5$ it suffices to find one cycle which is easy: For each node, pick one of the outgoing edges. Then, starting anywhere and following the path, we eventually come to a vertex visited before, enclosing a cycle. Now let $k\geq 6$. Distribute the nodes of $G$ into $c=\lfloor k/(3\log k)\rfloor$ ``buckets'' uniformly at random and independently. We aim to find one cycle in each bucket. To that end it suffices to prove that each node has an outgoing edge within its bucket. For each node $v\in G$, define a bad event event $A_v\equiv$ ``node $v$ has no outgoing edge in its bucket''. Then
+$$\Pr[A_v]=\left(1-\frac1c\right)^k\leq\left(1-\frac{3\log k}{k}\right)^k=e^{3\log k}=\frac1{k^3}.$$
+As for the dependency set of $A_v$, note that $A_v$ and $A_u$ are independent provided that $\{v\}\cup N^+(v)$ and $\{u\}\cup N^+(u)$ are disjoint (here $N^+(v)$ denotes the set of successors of $v$). This is true for all but at most $k^2+2k$ other nodes $u$.
+
+Since $4pd=4\cdot\frac1{k^3}\cdot (k+1)^2\leq 1$ for $k\geq 6$, we may conclude by LLL.
+\end{proof}
+\begin{remark} There is a gap in the proof: we implicitly assume that each bucket is nonempty. Can you fill it in?
+\end{remark}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../main"
+%%% End: 
