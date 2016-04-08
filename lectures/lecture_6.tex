@@ -67,24 +67,20 @@ We now claim that if a node survives $i$ rounds of this process, then its load d
 To see this, note that the balls removed in the first round have a height of at most 10. After removing these balls, the ones that are removed in the second round have a height of at most 10, so they initially had a height of at most 20, since in each bin at most 10 balls could be removed. Continuing this argument inductively proves the claim.
 
 So the maximum load is no more than $10r + k$, where $r$ is the number of rounds. This proves that whp the maximum load is $O(\log \log n)$. We now just need to prove the lemmas.
-
 \end{proof}
 
 \begin{proof}[Proof of Lemma \ref{lemma57}]
 We have a graph with $n$ vertices and $m = \frac{n}{512}$ edges where we connect vertices at random. Fix a subset $S$ of size $k+1$ of vertices. We have:
-$$
-\Pr[S\text{ is connected}] \leq \Pr[\text{There are at least } k \text{ edges in the } k+1 \text{ vertices of } S] \leq
-$$
-$$
-\leq \binom{m}{k} \left(\frac{\binom{k+1}{2}}{\binom{n}{2}}\right)^k \leq \binom{m}{k} \left( \frac{4k^2}{n^2} \right)^k
-$$
+\begin{align*}
+\Pr[S\text{ is connected}] &\leq \Pr[\text{There are at least } k \text{ edges in the } k+1 \text{ vertices of } S]\\
+&\leq \binom{m}{k} \left(\frac{\binom{k+1}{2}}{\binom{n}{2}}\right)^k \leq \binom{m}{k} \left( \frac{4k^2}{n^2} \right)^k
+\end{align*}
 
 Now we apply the union bound to get:
 $$
 \Pr[\text{There exists a connected component of } k+1 \text{ vertices}] \leq \binom{n}{k+1} \binom{m}{k} \left( \frac{4k^2}{n^2} \right)^k \leq$$ $$\leq n \left(\frac{ne}{k} \right)^k \left(\frac{ne}{512k} \right)^k \left(\frac{4k^2}{n^2} \right)^k = n \left(\frac{4e^2}{512} \right)^k \leq \frac{1}{n^2},
 $$
 for $k = O(\log n)$.
-
 \end{proof}
 
 \begin{proof}[Proof of Lemma \ref{lemma58}]
@@ -101,5 +97,9 @@ $$\binom{n}{k} \binom{m}{5k/2} \left( \frac{k}{n}\right)^{5k} \leq
 \left( \frac{ne}{k} \right)^k \left( \frac{ne}{512 \times 5k/2} \right)^{5k/2} \left( \frac{k}{n} \right)^{5k} \leq \left( \frac{k}{n} \right)^{3k/2} \alpha^k,
 $$
 for some constant $\alpha < 1$.
-
 \end{proof}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../main"
+%%% End: 
