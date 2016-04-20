@@ -11,7 +11,7 @@ remove from a graph such that it becomes disconnected.
   The \emph{size} of the cut is the cardinality of the cut-set.
 \end{definition}
 
-The \emph{minimum cut problem} is to find the size of the smalles
+The \emph{minimum cut problem} is to find the size of the smallest
 cut.\footnote{The algorithms we consider also compute a witness.}
 
 \subsection{Karger's Algorithm}
@@ -124,13 +124,60 @@ The probability that the output is not a min-cut set is bounded by
 \[ \left(1 - \frac{2}{n(n-1)}\right)^{n(n-1)\ln n} \leq e^{-2 \ln n} = \frac{1}{n^2}.\]
 In the first inequality we have used the fact that $1-x \leq e^{-x}$.
 
-However, every invokation of Karger's algorithm has running time $O(n^2)$, and
+However, every invocation of Karger's algorithm has running time $O(n^2)$, and
 thus we end up with an $\widetilde{O}(n^4)$ algorithm. 
 We will try to improve on that in the next section.
 
 \subsection{Karger--Stein Algorithm}
 
-TODO
+Suppose we stop Karger's algorithm as soon as the graph was reduced to $t$ vertices.
+The probability that a specific cut was avoided until this step is greater than
+\[
+\prod_{i=0}^{n-t-1} \left( 1 - \frac{2}{n-i} \right) = \frac {\binom{t}{2}}  {\binom{n}{2}},
+\]
+which becomes less than $\frac{1}{2}$ around $t = \frac{n}{\sqrt{2}}$.
+Thus the idea of the Karger--Stein algorithm is to recursively contract two
+copies of the input graph until this bound.
+
+
+\begin{tabbing}
+\hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \= \hspace*{.25in} \=\kill
+\>{\bf if} $|V| \leq 6$ (or some other small constant) \\
+\>\> {\bf return} explicitly computed minimum cut \\
+\>{\bf else} \\
+\>\> obtain $G_1$ and $G_2$ by two independent runs of Karger's algorithm \\
+\>\>\> until the graph has $\frac{|V|}{\sqrt{2}}$ vertices left\\
+\>\> recurse on $G_1$ and $G_2$ \\
+\>\> {\bf return} the minimum of both recursive calls
+\end{tabbing}
+
+The probability $P(n)$ that the algorithm finds a specific cut in an $n$-vertex
+graph is given by the recurrence
+\[
+P(n) = 1 - \left( 1 - \frac{1}{2} P\left(\frac{n}{\sqrt{2}}\right)\right)^2.
+\]
+
+\begin{lemma}
+  $P(n) \geq \frac{1}{\log n}$.
+\end{lemma}
+\begin{proof}
+  By induction on $n$.
+\end{proof}
+
+The running time of the algorithm follows the recurrence
+\[
+T(n) = O(n^2) + 2 \cdot T\left(\frac{n}{\sqrt{2}}\right).
+\]
+
+\begin{lemma}
+  $T(n) = O(n^2 \log n)$.
+\end{lemma}
+\begin{proof}
+  By the master theorem.
+\end{proof}
+
+By repeating the algorithm $\log^2 n$ times, we obtain an error probability of
+$\frac{1}{n}$ with an overall running time of $O(n^2 \log^3 n)$.
 
 %%% Local Variables: 
 %%% mode: latex
